@@ -15,6 +15,8 @@ import connectDB from './config/connectDB';
 import { customLoggerFormat, loggerStream } from './config/morganLogger';
 import createDirectories from './utils/createDirectories';
 
+import authRoutes from './routes/authRoutes';
+
 const PORT = process.env.PORT || 3500;
 const app: Application = express();
 
@@ -32,6 +34,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(cors());
+
+app.use('/login', authRoutes);
 
 app.all('*', (_req: Request, _res: Response, next: NextFunction) => {
   next(createHttpError(404, 'Not Found'));
