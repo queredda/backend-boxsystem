@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(cors());
 
-app.use('/login', authRoutes);
+app.use('/auth', authRoutes);
 
 app.all('*', (_req: Request, _res: Response, next: NextFunction) => {
   next(createHttpError(404, 'Not Found'));

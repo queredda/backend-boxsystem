@@ -8,6 +8,9 @@ import { User, UserModel } from '../models/User';
 interface LoginWithEmailRequest extends Request {
   body: {
     email: string;
+    googleId: string;
+    name?: string;
+    profilePic?: string;
   };
 }
 
@@ -20,15 +23,6 @@ interface LogoutResponse {
 }
 
 export class AuthController {
-  // GET /auth/failure
-  public static failure(
-    _req: Request,
-    _res: Response,
-    next: NextFunction,
-  ): void {
-    next(createHttpError(401, 'Google login failed'));
-  }
-
   // POST /auth/loginemail
   public static async loginWithEmail(
     req: LoginWithEmailRequest,
@@ -36,10 +30,21 @@ export class AuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const { email }: { email: string } = req.body;
-      const user: DocumentType<User> | null = await UserModel.findOne({
+      const { email, googleId, profilePic, name } = req.body;
+      let user: DocumentType<User> | null = await UserModel.findOne({
         email,
       });
+
+      if (!user) {
+        const newUser = new UserModel({
+          email,
+          googleId,
+          profilePic,
+          name,
+        });
+        await newUser.save();
+        user = newUser;
+      }
 
       if (!user) throw createHttpError(404, 'User not found');
 

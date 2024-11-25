@@ -5,6 +5,8 @@ const router = express.Router();
 
 // POST /ogout
 // This route handles user logout (currently commented out)
-router.post('/', AuthController.loginWithEmail);
+router.post('/login', AuthController.loginWithEmail);
+
+router.get('/logout', AuthController.logout);
 
 export default router;
