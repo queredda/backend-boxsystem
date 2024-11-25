@@ -13,7 +13,6 @@ import mongoose from 'mongoose';
 import helmet from 'helmet';
 import connectDB from './config/connectDB';
 import { customLoggerFormat, loggerStream } from './config/morganLogger';
-import createDirectories from './utils/createDirectories';
 
 import authRoutes from './routes/authRoutes';
 
@@ -21,7 +20,6 @@ const PORT = process.env.PORT || 3500;
 const app: Application = express();
 
 connectDB();
-createDirectories();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
