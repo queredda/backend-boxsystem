@@ -29,7 +29,21 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-app.use(cors());
+const whitelist = ['http://localhost:3000'];
+const corsOptions = {
+  origin: (
+    origin: string | undefined,
+    callback: (err: Error | null, allow?: boolean) => void,
+  ) => {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      createHttpError(403, 'Not allowed by CORS');
+    }
+  },
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 app.use('/auth', authRoutes);
 
