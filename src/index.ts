@@ -12,7 +12,7 @@ import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
 import helmet from 'helmet';
 import connectDB from './config/connectDB';
-import { customLoggerFormat, loggerStream } from './config/morganLogger';
+// import { customLoggerFormat, loggerStream } from './config/morganLogger';
 
 import authRoutes from './routes/authRoutes';
 
@@ -28,7 +28,7 @@ app.use(helmet());
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
-  app.use(morgan(customLoggerFormat, { stream: loggerStream }));
+  // app.use(morgan(customLoggerFormat, { stream: loggerStream }));
 }
 
 app.use(cors());
