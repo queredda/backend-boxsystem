@@ -7,7 +7,9 @@ import moment from 'moment-timezone';
 const logsDir = path.resolve(__dirname, '../logs');
 const accessLogPath = path.join(logsDir, 'access.log');
 
-const accessLogStream = fs.createWriteStream(accessLogPath, { flags: 'a' });
+let accessLogStream: fs.WriteStream | undefined;
+if (process.env.NODE_ENV === 'development')
+  accessLogStream = fs.createWriteStream(accessLogPath, { flags: 'a' });
 
 morgan.token('date', () =>
   moment().tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss'),
@@ -30,7 +32,7 @@ const customLoggerFormat =
 
 const loggerStream: StreamOptions = {
   write: (message) => {
-    accessLogStream.write(message);
+    accessLogStream!.write(message);
   },
 };
 
