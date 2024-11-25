@@ -62,6 +62,36 @@ export class AuthController {
     }
   }
 
+  public static async getUserData(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const user = req.user as DocumentType<User>;
+      res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public static async changeRole(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const user = req.user as DocumentType<User>;
+      if (req.body.role !== 'admin' && req.body.role !== 'user')
+        throw createHttpError(400, 'Invalid role');
+      user.role = req.body.role;
+      await user.save();
+      res.json({ message: 'Role changed successfully' });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // POST /auth/logout
   public static async logout(
     req: Request,
@@ -69,7 +99,6 @@ export class AuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const user = req.user as DocumentType<User>;
       AuthController.clearTokenCookie(res);
       res.json({ message: 'Logged out successfully' });
     } catch (error) {
