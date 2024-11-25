@@ -8,7 +8,9 @@ yarn-error.log*
 *.tsbuildinfo
 
 # Logs
+logs
 *.log
+logs/*
 
 # Dependency directories
 jspm_packages/
