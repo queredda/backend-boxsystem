@@ -36,6 +36,11 @@ export class AuthController {
       });
 
       if (!user) {
+        if (!name || !profilePic || !googleId)
+          throw createHttpError(
+            400,
+            'Name, profilePic, and googleId are required',
+          );
         const newUser = new UserModel({
           email,
           googleId,
