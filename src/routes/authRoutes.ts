@@ -12,6 +12,6 @@ router.get('/profile', protectAll, AuthController.getUserData);
 
 router.get('/logout', protectAll, AuthController.logout);
 
-router.post('/role', protectAll, AuthController.changeRole);
+router.patch('/role', protectAll, AuthController.changeRole);
 
 export default router;
