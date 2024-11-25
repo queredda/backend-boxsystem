@@ -8,7 +8,7 @@ const router = express.Router();
 // This route handles user logout (currently commented out)
 router.post('/login', AuthController.loginWithEmail);
 
-router.get('/user', protectAll, AuthController.getUserData);
+router.get('/profile', protectAll, AuthController.getUserData);
 
 router.get('/logout', protectAll, AuthController.logout);
 
