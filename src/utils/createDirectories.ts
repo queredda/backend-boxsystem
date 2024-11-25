@@ -4,6 +4,7 @@ import path from 'path';
 const rootDir = path.resolve(__dirname, '..');
 
 const createDirectories = () => {
+  if (process.env.NODE_ENV === 'production') return;
   const directories = ['logs', '../dist'];
 
   directories.forEach((dir) => {
