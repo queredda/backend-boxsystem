@@ -8,7 +8,7 @@ import { User, UserModel } from '../models/User';
 interface LoginWithEmailRequest extends Request {
   body: {
     email: string;
-    password: string;
+    pewede: string;
   };
 }
 
@@ -28,17 +28,17 @@ export class AuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const { email, password } = req.body;
-      if (!email || !password)
+      const { email, pewede } = req.body;
+      if (!email || !pewede)
         throw createHttpError(400, 'Email and password are required');
 
       let user: DocumentType<User> | null = await UserModel.findOne({
         email,
-        password,
+        pewede,
       });
 
       if (!user) {
-        const newUser = new UserModel({ email, password });
+        const newUser = new UserModel({ email, pewede });
         await newUser.save();
         user = newUser;
       }

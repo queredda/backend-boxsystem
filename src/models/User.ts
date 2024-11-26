@@ -19,7 +19,7 @@ export class User {
   public email!: string;
 
   @prop({})
-  public password?: string;
+  public pewede?: string;
 
   @prop({})
   public name?: string;
