@@ -32,7 +32,7 @@ export class UserController {
       const availableBaikInventory: inventoryColumn | undefined =
         separatedInventory.find(
           (inventory) =>
-            inventory.status === 'Available' && inventory.kondisi === 'Baik',
+            inventory.status === 'Available' && inventory.kondisi === 'baik',
         );
 
       if (!availableBaikInventory) {
@@ -79,7 +79,7 @@ export class UserController {
         const availableBaikInventory: inventoryColumn | undefined =
           separatedInventory.find(
             (inventory) =>
-              inventory.status === 'Available' && inventory.kondisi === 'Baik',
+              inventory.status === 'Available' && inventory.kondisi === 'baik',
           );
 
         if (availableBaikInventory)
