@@ -61,7 +61,7 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     const httpError = err as createHttpError.HttpError;
     res.status(httpError.status).json({ message: httpError.message });
   } else {
-    if (process.env.NODE_ENV === 'development') console.error(err);
+    console.error(err);
     res.status(500).json({
       message: err.message.length > 40 ? 'Internal Server Error' : err.message,
     });
