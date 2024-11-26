@@ -12,6 +12,8 @@ export interface DecodedJwt {
   iat: number;
   exp: number;
   iss?: string;
+  email: string;
+  name?: string;
 }
 
 export class User {
@@ -21,7 +23,7 @@ export class User {
   @prop({})
   public password?: string;
 
-  @prop({})
+  @prop({ default: 'Anonymous' })
   public name?: string;
 
   @prop({})
@@ -34,6 +36,7 @@ export class User {
     const payload: Omit<DecodedJwt, 'iat' | 'exp'> = {
       id: this.id,
       role: this.role,
+      email: this.email,
     };
 
     const options: jwt.SignOptions = {

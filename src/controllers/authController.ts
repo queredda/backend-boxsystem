@@ -34,8 +34,10 @@ export class AuthController {
 
       let user: DocumentType<User> | null = await UserModel.findOne({
         email,
-        password,
       });
+
+      if (user && user.password !== password)
+        throw createHttpError(401, 'Invalid email or password');
 
       if (!user) {
         const newUser = new UserModel({ email, password });
@@ -76,6 +78,8 @@ export class AuthController {
   ): Promise<void> {
     try {
       const user = req.user as DocumentType<User>;
+      // exclude password from user object
+      user.password = undefined;
       res.json(user);
     } catch (error) {
       next(error);
