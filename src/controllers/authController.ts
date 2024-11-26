@@ -118,11 +118,8 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 1000 * 60 * 60 * 24 * 7,
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      domain:
-        process.env.NODE_ENV === 'production'
-          ? process.env.FRONTEND_URN!
-          : 'localhost',
+      sameSite: 'none',
+      path: '/',
     });
   }
 
@@ -130,11 +127,8 @@ export class AuthController {
     res.clearCookie('jwt', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      domain:
-        process.env.NODE_ENV === 'production'
-          ? process.env.FRONTEND_URN!
-          : 'localhost',
+      sameSite: 'none',
+      path: '/',
     });
   }
 }
