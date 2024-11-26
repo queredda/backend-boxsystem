@@ -6,6 +6,8 @@ import {
   inventorySeparator,
   inventoryColumn,
 } from '../utils/inventorySeparator';
+import { LoanRequest, LoanRequestModel } from '../models/LoanRequest';
+import { UserModel } from '../models/User';
 
 export class AdminController {
   static async createInventory(
@@ -48,6 +50,28 @@ export class AdminController {
         inventoryResponse.push(...separatedInventory);
       }
       res.status(200).json(inventoryResponse);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getAllLoanRequests(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const loanRequests: DocumentType<LoanRequest>[] =
+        await LoanRequestModel.find();
+      const loanRequestsArray = loanRequests.map((loanRequest) =>
+        loanRequest.toObject(),
+      );
+      for (const loanRequest of loanRequestsArray) {
+        // add nama user column
+        const user = await UserModel.findById(loanRequest.userId);
+        loanRequest.namaUser = user?.name;
+      }
+      res.status(200).json(loanRequestsArray);
     } catch (error) {
       next(error);
     }

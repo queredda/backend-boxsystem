@@ -51,6 +51,9 @@ export class LoanRequest {
 
   @prop({})
   public loanId!: number;
+
+  @prop()
+  public namaUser?: string;
 }
 
 export const LoanRequestModel = getModelForClass(LoanRequest);

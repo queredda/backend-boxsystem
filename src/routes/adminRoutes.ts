@@ -16,4 +16,7 @@ router.post(
 // get all inventory
 router.get('/inventory', protectAdmin, AdminController.getAllInventory);
 
+// get all loan requests
+router.get('/loanrequest', protectAdmin, AdminController.getAllLoanRequests);
+
 export default router;
