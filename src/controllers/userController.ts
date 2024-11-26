@@ -90,4 +90,23 @@ export class UserController {
       next(error);
     }
   }
+
+  static async getAllLoanRequests(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const user = req.user as DocumentType<User>;
+      const loanRequests: DocumentType<LoanRequest>[] =
+        await LoanRequestModel.find({ userId: user._id });
+      // exclude isReturned: true
+      const filteredLoanRequests = loanRequests.filter(
+        (loanRequest) => !loanRequest.isReturned,
+      );
+      res.status(200).json(filteredLoanRequests);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
