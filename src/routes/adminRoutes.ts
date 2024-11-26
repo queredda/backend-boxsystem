@@ -19,4 +19,6 @@ router.get('/inventory', protectAdmin, AdminController.getAllInventory);
 // get all loan requests
 router.get('/loanrequest', protectAdmin, AdminController.getAllLoanRequests);
 
+router.patch('/loanrequest', protectAdmin, AdminController.updateLoanRequest);
+
 export default router;

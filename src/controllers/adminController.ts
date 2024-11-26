@@ -76,4 +76,27 @@ export class AdminController {
       next(error);
     }
   }
+
+  static async updateLoanRequest(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const { status, loanId } = req.body;
+      if (!status) throw createHttpError(400, 'Status is required');
+
+      const loanRequest: DocumentType<LoanRequest> | null =
+        await LoanRequestModel.findOne({ loanId });
+      if (!loanRequest) throw createHttpError(404, 'Loan request not found');
+      if (loanRequest?.status !== 'Proses')
+        throw createHttpError(400, 'Loan request has been processed');
+
+      loanRequest.status = status;
+      await loanRequest.save();
+      res.status(200).json(loanRequest);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
