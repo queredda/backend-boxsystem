@@ -1,23 +1,23 @@
 import { Request, Response, NextFunction } from 'express';
-import { User, UserModel, DecodedJwt } from '../models/User';
+import { User, UserModel } from '../models/User';
 import createHttpError from 'http-errors';
 import { DocumentType } from '@typegoose/typegoose';
 
 // TODO: handle userActive
 
-async function authenticate(req: Request): Promise<DocumentType<User>> {
-  const token: string = req.cookies['jwt'];
-  if (!token) throw createHttpError(401, 'User not authenticated');
+// async function authenticate(req: Request): Promise<DocumentType<User>> {
+// const token: string = req.cookies['jwt'];
+// if (!token) throw createHttpError(401, 'User not authenticated');
 
-  const decodedToken: DecodedJwt | null = User.decodeToken(token);
-  if (!decodedToken) throw createHttpError(401, 'Invalid token');
+// const decodedToken: DecodedJwt | null = User.decodeToken(token);
+// if (!decodedToken) throw createHttpError(401, 'Invalid token');
 
-  const userId: string = decodedToken.id;
-  const user: DocumentType<User> | null = await UserModel.findById(userId);
-  if (!user) throw createHttpError(401, 'User not found');
+// const userId: string = decodedToken.id;
+// const user: DocumentType<User> | null = await UserModel.findById(userId);
+// if (!user) throw createHttpError(401, 'User not found');
 
-  return user;
-}
+//   return user;
+// }
 
 export async function protectAll(
   req: Request,
@@ -25,7 +25,11 @@ export async function protectAll(
   next: NextFunction,
 ): Promise<void> {
   try {
-    const user = await authenticate(req);
+    // const user = await authenticate(req);
+    const user: DocumentType<User> | null = await UserModel.findOne({
+      email: 'farrelganteng426@gmail.com',
+    });
+    if (!user) throw createHttpError(401, 'User not found');
     req.user = user;
     next();
   } catch (error) {
@@ -39,7 +43,10 @@ export async function protectAdmin(
   next: NextFunction,
 ): Promise<void> {
   try {
-    const user = await authenticate(req);
+    const user: DocumentType<User> | null = await UserModel.findOne({
+      email: 'farrelganteng426@gmail.com',
+    });
+    if (!user) throw createHttpError(401, 'User not found');
     if (user.role !== 'admin')
       throw createHttpError(403, 'Access denied, admin only');
     req.user = user;
@@ -55,7 +62,10 @@ export async function protectUser(
   next: NextFunction,
 ): Promise<void> {
   try {
-    const user = await authenticate(req);
+    const user: DocumentType<User> | null = await UserModel.findOne({
+      email: 'muhamadfarreladrian@mail.ugm.ac.id',
+    });
+    if (!user) throw createHttpError(401, 'User not found');
     if (user.role !== 'user')
       throw createHttpError(403, 'Access denied, user only');
     req.user = user;
