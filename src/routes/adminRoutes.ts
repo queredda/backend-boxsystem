@@ -31,4 +31,6 @@ router.patch(
   AdminController.updateReturnedItem,
 );
 
+router.get('/stats', protectAdmin, AdminController.stats);
+
 export default router;
