@@ -6,7 +6,11 @@ import {
   inventorySeparator,
   inventoryColumn,
 } from '../utils/inventorySeparator';
-import { LoanRequest, LoanRequestModel } from '../models/LoanRequest';
+import {
+  LoanRequest,
+  LoanRequestModel,
+  RequestStatus,
+} from '../models/LoanRequest';
 import { UserModel } from '../models/User';
 
 export class AdminController {
@@ -92,7 +96,8 @@ export class AdminController {
       if (loanRequest?.status !== 'Proses')
         throw createHttpError(400, 'Loan request has been processed');
 
-      loanRequest.status = status;
+      if (status === 'Terima') loanRequest.status = RequestStatus.Delivered;
+      else if (status === 'Tolak') loanRequest.status = RequestStatus.Canceled;
       await loanRequest.save();
       res.status(200).json(loanRequest);
     } catch (error) {
@@ -139,6 +144,32 @@ export class AdminController {
         loanRequest.namaUser = user?.name;
       }
       res.status(200).json(loanRequestsArray);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async updateReturnedItem(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const { loanId, returnedCondition } = req.body;
+      if (!returnedCondition)
+        throw createHttpError(400, 'Returned condition is required');
+
+      const loanRequest: DocumentType<LoanRequest> | null =
+        await LoanRequestModel.findOne({ loanId });
+      if (!loanRequest) throw createHttpError(404, 'Loan request not found');
+      if (loanRequest.isReturned)
+        throw createHttpError(400, 'Item has been returned');
+
+      loanRequest.isReturned = true;
+      loanRequest.status = RequestStatus.Canceled;
+      loanRequest.returnedCondition = returnedCondition;
+      await loanRequest.save();
+      res.status(200).json(loanRequest);
     } catch (error) {
       next(error);
     }

@@ -25,4 +25,10 @@ router.get('/borroweditems', protectAdmin, AdminController.getAllBorrowedItems);
 
 router.get('/returneditems', protectAdmin, AdminController.getAllReturnedItems);
 
+router.patch(
+  '/returneditems',
+  protectAdmin,
+  AdminController.updateReturnedItem,
+);
+
 export default router;
