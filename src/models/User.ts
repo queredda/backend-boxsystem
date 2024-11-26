@@ -18,8 +18,8 @@ export class User {
   @prop({ required: true, unique: true })
   public email!: string;
 
-  @prop({ required: true, unique: true })
-  public googleId!: string;
+  @prop({})
+  public password?: string;
 
   @prop({})
   public name?: string;

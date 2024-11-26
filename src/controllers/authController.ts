@@ -8,9 +8,7 @@ import { User, UserModel } from '../models/User';
 interface LoginWithEmailRequest extends Request {
   body: {
     email: string;
-    googleId: string;
-    name?: string;
-    profilePic?: string;
+    password: string;
   };
 }
 
@@ -30,33 +28,42 @@ export class AuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const { email, googleId, profilePic, name } = req.body;
+      const { email, password } = req.body;
+      if (!email || !password)
+        throw createHttpError(400, 'Email and password are required');
+
       let user: DocumentType<User> | null = await UserModel.findOne({
         email,
+        password,
       });
 
       if (!user) {
-        if (!name || !profilePic || !googleId)
-          throw createHttpError(
-            400,
-            'Name, profilePic, and googleId are required',
-          );
-        const newUser = new UserModel({
-          email,
-          googleId,
-          profilePic,
-          name,
-        });
+        const newUser = new UserModel({ email, password });
         await newUser.save();
         user = newUser;
       }
-
-      if (!user) throw createHttpError(404, 'User not found');
 
       const token: string = await user.generateToken();
       AuthController.setTokenCookie(res, token);
 
       res.json({ message: 'Logged in successfully' });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public static async editProfile(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const user = req.user as DocumentType<User>;
+      const { name, profilePic } = req.body;
+      if (name) user.name = name;
+      if (profilePic) user.profilePic = profilePic;
+      await user.save();
+      res.json({ message: 'Profile updated successfully' });
     } catch (error) {
       next(error);
     }
