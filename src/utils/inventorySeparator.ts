@@ -116,6 +116,18 @@ export async function inventorySeparator(id: string) {
     );
     if (availableBaikInventoryColumn)
       availableBaikInventoryColumn.kuantitas = totalAvailableBaik;
+    else {
+      editedInventoryResponse.push({
+        id: inventory.id,
+        name: inventory.name,
+        kategori: inventory.kategori,
+        kondisi: 'Baik',
+        kuantitas: totalAvailableBaik,
+        paymentMethod: inventory.paymentMethod,
+        imageUrl: inventory.imageUrl || '',
+        status: 'Available',
+      });
+    }
 
     return editedInventoryResponse;
   }
