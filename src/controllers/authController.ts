@@ -119,6 +119,7 @@ export class AuthController {
       secure: process.env.NODE_ENV === 'production',
       maxAge: 1000 * 60 * 60 * 24 * 7,
       sameSite: 'none',
+      domain: '.boxsystem.site',
       path: '/',
     });
   }
@@ -129,6 +130,7 @@ export class AuthController {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'none',
       path: '/',
+      domain: '.boxsystem.site',
     });
   }
 }
