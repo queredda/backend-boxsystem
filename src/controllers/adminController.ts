@@ -40,7 +40,6 @@ export class AdminController {
     try {
       const inventories: DocumentType<Inventory>[] =
         await InventoryModel.find();
-      console.log(inventories);
       const inventoryResponse: inventoryColumn[] = [];
       for (const inventory of inventories) {
         const separatedInventory: inventoryColumn[] = await inventorySeparator(
