@@ -24,6 +24,9 @@ export class Inventory {
   @prop({ required: true })
   public kategori!: string;
 
+  @prop({ required: true })
+  public paymentMethod!: string;
+
   @prop({})
   public imageUrl?: string;
 }

@@ -7,7 +7,7 @@ export enum RequestStatus {
   Delivered = 'Delivered',
 }
 
-export enum ConditionStatus {
+export enum ReturnedCondition {
   Baik = 'baik',
   Rusak = 'rusak',
 }
@@ -31,8 +31,12 @@ export class LoanRequest {
   @prop({ required: true, default: false })
   public isReturned!: boolean;
 
-  @prop({ required: true, enum: ConditionStatus })
-  public returnedCondition!: ConditionStatus;
+  @prop({
+    required: true,
+    enum: ReturnedCondition,
+    default: ReturnedCondition.Baik,
+  })
+  public returnedCondition!: ReturnedCondition;
 }
 
 export const LoanRequestModel = getModelForClass(LoanRequest);
