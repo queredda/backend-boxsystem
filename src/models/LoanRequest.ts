@@ -1,5 +1,6 @@
-import { prop, getModelForClass, Ref } from '@typegoose/typegoose';
+import { prop, getModelForClass, Ref, pre } from '@typegoose/typegoose';
 import { User } from './User';
+import { CounterModel } from './Counter';
 
 export enum RequestStatus {
   Proses = 'Proses',
@@ -12,6 +13,16 @@ export enum ReturnedCondition {
   Rusak = 'rusak',
 }
 
+@pre<LoanRequest>('save', async function () {
+  if (this.isNew) {
+    const counter = await CounterModel.findByIdAndUpdate(
+      { _id: 'loanId' },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true },
+    );
+    this.loanId = counter.seq;
+  }
+})
 export class LoanRequest {
   @prop({ required: true })
   public inventoryId!: number;
@@ -37,6 +48,9 @@ export class LoanRequest {
     default: ReturnedCondition.Baik,
   })
   public returnedCondition!: ReturnedCondition;
+
+  @prop({})
+  public loanId!: number;
 }
 
 export const LoanRequestModel = getModelForClass(LoanRequest);
