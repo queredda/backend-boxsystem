@@ -31,7 +31,11 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-const whitelist = ['http://localhost:3000'];
+const whitelist = [
+  'http://localhost:3000',
+  'https://boxsystem.site',
+  'boxsystem.site',
+];
 const corsOptions = {
   origin: (
     origin: string | undefined,
