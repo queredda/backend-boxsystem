@@ -30,7 +30,7 @@ export async function inventorySeparator(id: string) {
       id: inventory.id,
       name: inventory.name,
       kategori: inventory.kategori,
-      kondisi: 'Baik',
+      kondisi: 'baik',
       kuantitas: inventory.totalKuantitas,
       paymentMethod: inventory.paymentMethod,
       imageUrl: inventory.imageUrl || '',
@@ -44,7 +44,7 @@ export async function inventorySeparator(id: string) {
         kategori: inventory.kategori,
         kondisi: loanRequest.isReturned
           ? loanRequest.returnedCondition
-          : 'Baik',
+          : 'baik',
         kuantitas: loanRequest.kuantitas,
         paymentMethod: inventory.paymentMethod,
         imageUrl: inventory.imageUrl || '',
@@ -64,10 +64,10 @@ export async function inventorySeparator(id: string) {
     for (const eachInventoryResponse of inventoryResponse) {
       if (
         eachInventoryResponse.status === 'Available' &&
-        eachInventoryResponse.kondisi === 'Baik'
+        eachInventoryResponse.kondisi === 'baik'
       ) {
         const index = editedInventoryResponse.findIndex(
-          (inv) => inv.status === 'Available' && inv.kondisi === 'Baik',
+          (inv) => inv.status === 'Available' && inv.kondisi === 'baik',
         );
         if (index === -1) editedInventoryResponse.push(eachInventoryResponse);
         else
@@ -75,10 +75,10 @@ export async function inventorySeparator(id: string) {
             eachInventoryResponse.kuantitas;
       } else if (
         eachInventoryResponse.status === 'Available' &&
-        eachInventoryResponse.kondisi === 'Rusak'
+        eachInventoryResponse.kondisi === 'rusak'
       ) {
         const index = editedInventoryResponse.findIndex(
-          (inv) => inv.status === 'Available' && inv.kondisi === 'Rusak',
+          (inv) => inv.status === 'Available' && inv.kondisi === 'rusak',
         );
         if (index === -1) editedInventoryResponse.push(eachInventoryResponse);
         else
@@ -86,10 +86,10 @@ export async function inventorySeparator(id: string) {
             eachInventoryResponse.kuantitas;
       } else if (
         eachInventoryResponse.status === 'Borrowed' &&
-        eachInventoryResponse.kondisi === 'Baik'
+        eachInventoryResponse.kondisi === 'baik'
       ) {
         const index = editedInventoryResponse.findIndex(
-          (inv) => inv.status === 'Borrowed' && inv.kondisi === 'Baik',
+          (inv) => inv.status === 'Borrowed' && inv.kondisi === 'baik',
         );
         if (index === -1) editedInventoryResponse.push(eachInventoryResponse);
         else
@@ -101,18 +101,18 @@ export async function inventorySeparator(id: string) {
     const totalKuantitas = inventory.totalKuantitas;
     const totalAvailableRusak =
       editedInventoryResponse.find(
-        (inv) => inv.status === 'Available' && inv.kondisi === 'Rusak',
+        (inv) => inv.status === 'Available' && inv.kondisi === 'rusak',
       )?.kuantitas || 0;
     const totalBorrowed =
       editedInventoryResponse.find(
-        (inv) => inv.status === 'Borrowed' && inv.kondisi === 'Baik',
+        (inv) => inv.status === 'Borrowed' && inv.kondisi === 'baik',
       )?.kuantitas || 0;
 
     const totalKeduanya = totalAvailableRusak + totalBorrowed;
     const totalAvailableBaik = totalKuantitas - totalKeduanya;
 
     const availableBaikInventoryColumn = editedInventoryResponse.find(
-      (inv) => inv.status === 'Available' && inv.kondisi === 'Baik',
+      (inv) => inv.status === 'Available' && inv.kondisi === 'baik',
     );
     if (availableBaikInventoryColumn)
       availableBaikInventoryColumn.kuantitas = totalAvailableBaik;
@@ -121,7 +121,7 @@ export async function inventorySeparator(id: string) {
         id: inventory.id,
         name: inventory.name,
         kategori: inventory.kategori,
-        kondisi: 'Baik',
+        kondisi: 'baik',
         kuantitas: totalAvailableBaik,
         paymentMethod: inventory.paymentMethod,
         imageUrl: inventory.imageUrl || '',
