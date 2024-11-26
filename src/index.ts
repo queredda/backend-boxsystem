@@ -14,6 +14,8 @@ import helmet from 'helmet';
 import connectDB from './config/connectDB';
 
 import authRoutes from './routes/authRoutes';
+import adminRoutes from './routes/adminRoutes';
+import userRoutes from './routes/userRoutes';
 
 const PORT = process.env.PORT || 3500;
 const app: Application = express();
@@ -46,6 +48,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use('/auth', authRoutes);
+app.use('/admin', adminRoutes);
+app.use('/user', userRoutes);
 
 app.all('*', (_req: Request, _res: Response, next: NextFunction) => {
   next(createHttpError(404, 'Not Found'));
