@@ -12,6 +12,7 @@ import {
   RequestStatus,
 } from '../models/LoanRequest';
 import { UserModel } from '../models/User';
+import { SaveOneFileToDrive } from '../utils/CRUDFileToDrive';
 
 export class AdminController {
   static async createInventory(
@@ -24,11 +25,17 @@ export class AdminController {
       if (!name || !totalKuantitas || !kategori)
         throw createHttpError(400, 'All fields are required');
 
+      const file = req.file;
+      const imageUrl = file
+        ? await SaveOneFileToDrive(file, name)
+        : 'https://drive.google.com/uc?export=view&id=1M0cUhm03x3uSCvLPkUjSk0HVjcg2OOMQ';
+
       const inventory: DocumentType<Inventory> = new InventoryModel({
         name,
         totalKuantitas,
         kategori,
         paymentMethod,
+        imageUrl,
       });
 
       await inventory.save();
