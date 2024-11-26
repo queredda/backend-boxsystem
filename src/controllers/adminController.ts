@@ -99,4 +99,26 @@ export class AdminController {
       next(error);
     }
   }
+
+  static async getAllBorrowedItems(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const loanRequests: DocumentType<LoanRequest>[] =
+        await LoanRequestModel.find({ status: 'Delivered' });
+      // add nama user column
+      const loanRequestsArray = loanRequests.map((loanRequest) =>
+        loanRequest.toObject(),
+      );
+      for (const loanRequest of loanRequestsArray) {
+        const user = await UserModel.findById(loanRequest.userId);
+        loanRequest.namaUser = user?.name;
+      }
+      res.status(200).json(loanRequestsArray);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

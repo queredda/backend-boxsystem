@@ -21,4 +21,6 @@ router.get('/loanrequest', protectAdmin, AdminController.getAllLoanRequests);
 
 router.patch('/loanrequest', protectAdmin, AdminController.updateLoanRequest);
 
+router.get('/borroweditems', protectAdmin, AdminController.getAllBorrowedItems);
+
 export default router;
