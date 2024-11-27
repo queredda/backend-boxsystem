@@ -97,11 +97,8 @@ export class AdminController {
   ) {
     try {
       const allRequests = await Promise.all([
-        // Get pending requests
         LoanRequestModel.find({ status: 'Proses' }),
-        // Get borrowed items
         LoanRequestModel.find({ status: 'Delivered' }),
-        // Get returned items
         LoanRequestModel.find({ isReturned: true }),
       ]);
 
@@ -112,6 +109,10 @@ export class AdminController {
         combinedRequests.map(async (request) => {
           const loanRequest = request.toObject();
           const user = await UserModel.findById(loanRequest.userId);
+          const inventory = await InventoryModel.findOne({
+            id: loanRequest.inventoryId,
+          });
+          loanRequest.imageUrl = inventory?.imageUrl;
           loanRequest.namaUser = user?.name;
           return loanRequest;
         }),
