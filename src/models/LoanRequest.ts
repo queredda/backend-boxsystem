@@ -54,6 +54,9 @@ export class LoanRequest {
 
   @prop()
   public namaUser?: string;
+
+  @prop()
+  public imageUrl?: string;
 }
 
 export const LoanRequestModel = getModelForClass(LoanRequest);

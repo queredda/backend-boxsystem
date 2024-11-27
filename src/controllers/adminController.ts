@@ -66,28 +66,6 @@ export class AdminController {
     }
   }
 
-  static async getAllLoanRequests(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) {
-    try {
-      const loanRequests: DocumentType<LoanRequest>[] =
-        await LoanRequestModel.find();
-      const loanRequestsArray = loanRequests.map((loanRequest) =>
-        loanRequest.toObject(),
-      );
-      for (const loanRequest of loanRequestsArray) {
-        // add nama user column
-        const user = await UserModel.findById(loanRequest.userId);
-        loanRequest.namaUser = user?.name;
-      }
-      res.status(200).json(loanRequestsArray);
-    } catch (error) {
-      next(error);
-    }
-  }
-
   static async updateLoanRequest(
     req: Request,
     res: Response,
@@ -112,45 +90,43 @@ export class AdminController {
     }
   }
 
-  static async getAllBorrowedItems(
+  static async getAllLoanRequests(
     req: Request,
     res: Response,
     next: NextFunction,
   ) {
     try {
-      const loanRequests: DocumentType<LoanRequest>[] =
-        await LoanRequestModel.find({ status: 'Delivered' });
-      // add nama user column
-      const loanRequestsArray = loanRequests.map((loanRequest) =>
-        loanRequest.toObject(),
-      );
-      for (const loanRequest of loanRequestsArray) {
-        const user = await UserModel.findById(loanRequest.userId);
-        loanRequest.namaUser = user?.name;
-      }
-      res.status(200).json(loanRequestsArray);
-    } catch (error) {
-      next(error);
-    }
-  }
+      const allRequests = await Promise.all([
+        LoanRequestModel.find({ status: 'Proses' }),
+        LoanRequestModel.find({ status: 'Delivered' }),
+        LoanRequestModel.find({ isReturned: true }),
+      ]);
 
-  static async getAllReturnedItems(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) {
-    try {
-      const loanRequests: DocumentType<LoanRequest>[] =
-        await LoanRequestModel.find({ isReturned: true });
-      // add nama user column
-      const loanRequestsArray = loanRequests.map((loanRequest) =>
-        loanRequest.toObject(),
+      const [pending, borrowed, returned] = allRequests;
+      const combinedRequests = [...pending, ...borrowed, ...returned];
+
+      const loanRequestsWithUsers = await Promise.all(
+        combinedRequests.map(async (request) => {
+          const loanRequest = request.toObject();
+          const user = await UserModel.findById(loanRequest.userId);
+          const inventory = await InventoryModel.findOne({
+            id: loanRequest.inventoryId,
+          });
+          loanRequest.imageUrl = inventory?.imageUrl;
+          loanRequest.namaUser = user?.name;
+          return loanRequest;
+        }),
       );
-      for (const loanRequest of loanRequestsArray) {
-        const user = await UserModel.findById(loanRequest.userId);
-        loanRequest.namaUser = user?.name;
-      }
-      res.status(200).json(loanRequestsArray);
+
+      res.status(200).json({
+        pending: loanRequestsWithUsers.filter((req) => req.status === 'Proses'),
+        borrowed: loanRequestsWithUsers.filter(
+          (req) => req.status === 'Delivered',
+        ),
+        returned: loanRequestsWithUsers.filter(
+          (req) => req.isReturned === true,
+        ),
+      });
     } catch (error) {
       next(error);
     }

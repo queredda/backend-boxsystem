@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from 'express';
 import { DocumentType } from '@typegoose/typegoose';
 import createHttpError from 'http-errors';
 import { User, UserModel } from '../models/User';
+import { SaveOneFileToDrive } from '../utils/CRUDFileToDrive';
 
 interface LoginWithEmailRequest extends Request {
   body: {
@@ -61,9 +62,12 @@ export class AuthController {
   ): Promise<void> {
     try {
       const user = req.user as DocumentType<User>;
-      const { name, profilePic } = req.body;
+      const { name } = req.body;
       if (name) user.name = name;
-      if (profilePic) user.profilePic = profilePic;
+      let imageUrl = undefined;
+      if (req.file) imageUrl = await SaveOneFileToDrive(req.file, user.email);
+
+      if (imageUrl) user.profilePic = imageUrl;
       await user.save();
       res.json({ message: 'Profile updated successfully' });
     } catch (error) {

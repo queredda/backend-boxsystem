@@ -21,10 +21,6 @@ router.get('/loanrequest', protectAdmin, AdminController.getAllLoanRequests);
 
 router.patch('/loanrequest', protectAdmin, AdminController.updateLoanRequest);
 
-router.get('/borroweditems', protectAdmin, AdminController.getAllBorrowedItems);
-
-router.get('/returneditems', protectAdmin, AdminController.getAllReturnedItems);
-
 router.patch(
   '/returneditems',
   protectAdmin,

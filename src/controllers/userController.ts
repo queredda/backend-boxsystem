@@ -100,10 +100,19 @@ export class UserController {
       const user = req.user as DocumentType<User>;
       const loanRequests: DocumentType<LoanRequest>[] =
         await LoanRequestModel.find({ userId: user._id });
-      // exclude isReturned: true
       const filteredLoanRequests = loanRequests.filter(
         (loanRequest) => !loanRequest.isReturned,
       );
+      // add image url to response
+      for (const loanRequest of filteredLoanRequests) {
+        const inventory: DocumentType<Inventory> | null =
+          await InventoryModel.findOne({ id: loanRequest.inventoryId });
+        if (inventory) {
+          loanRequest.set('imageUrl', inventory.imageUrl, {
+            strict: false,
+          });
+        }
+      }
       res.status(200).json(filteredLoanRequests);
     } catch (error) {
       next(error);
